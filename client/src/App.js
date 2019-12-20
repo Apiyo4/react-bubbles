@@ -6,13 +6,14 @@ import "./styles.scss";
 
 import BubblePage from './components/BubblePage';
 
+
 function App() {
   
   return (
     <Router>
       <div className="App">
         <Route exact path="/" component={Login} />
-        {/* <Route exact path ='/bubble' component={BubblePage} /> */}
+        {/* {/* <Route exact path ='/colorList' component={BubblePage} />  */}
         <PrivateRoute path='/bubble' component={BubblePage}/>
 
         {/* 

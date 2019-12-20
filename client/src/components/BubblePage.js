@@ -17,7 +17,7 @@ const BubblePage = () => {
     .catch(er=>{
        alert(er.message)
     })
-  })
+  }, [])
 
   return (
     <>
