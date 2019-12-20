@@ -13,6 +13,10 @@ const initialColor = {
   
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [addColor, setAddColor] = useState({
+    color:'',
+    hex: ''
+  });
 
   const editColor = color => {
     setEditing(true);
@@ -47,7 +51,48 @@ const initialColor = {
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    axios().delete(`http://localhost:5000/api/colors/${color.id}`)
+    .then(res=>{
+      updateColors(colors.filter(color=> color.id !== res.data));
+    })
+    .catch(er=>{
+      alert(er.message);
+    })
   };
+  const handleChanges= e=>{
+    e.preventDefault();
+    setAddColor({
+      ...addColor,
+      [e.target.name] : e.target.value,   
+  })
+  }
+
+  const addNewColor= (e)=>{
+    e.preventDefault();
+    axios().post('http://localhost:5000/api/colors',{
+    color:  addColor.color,
+    code: {
+      hex: addColor.hex
+    },
+    id: addColor.id,
+    })
+    .then(res=>{
+      updateColors([...colors,
+        {color:  addColor.color,
+        code: {
+          hex: addColor.hex
+        },
+        id: addColor.id,
+        } ])
+    
+    })
+    .catch(er=>{
+      debugger
+    }
+
+    )
+
+  }
 
   return (
     <div className="colors-wrap">
@@ -102,8 +147,23 @@ const initialColor = {
           </div>
         </form>
       )}
+
       <div className="spacer" />
       {/* stretch - build another form here to add a color */}
+          <form onSubmit={addNewColor}>
+            <label> Enter Color:
+              <span>
+                <input type='text' name='color' value={addColor.color} onChange={handleChanges}/>
+              </span>
+            </label>
+            <label>
+              <span> Hex Code:
+                <input type='text' name='hex' value={addColor.hex} onChange={handleChanges}/>
+              </span>
+            </label>
+            <br/>
+            <button type='submit'>Add color</button>
+          </form>
     </div>
   );
 };
